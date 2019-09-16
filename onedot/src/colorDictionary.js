@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 import {LOCAL_DATA} from "./costants"
 
@@ -18,17 +18,25 @@ export default class ColorDictionary extends Component {
         super(props);
         this.state = { 
             domain:props.domain,
-            range:props.range
+            range:props.range,
+            indx:props.indx
          }
     }
   
+    cleanState= async()=>{
+      await this.setState({domain:"",range:""})
+    }
 
     handleDelete=()=>{
-      alert("deleted")
+      this.props.deleteEelment(this.state)
+      this.cleanState()
     }
-    handleSave=()=>{
+    handleSave=()=>{    
       this.props.addElement(this.state)
-      //localStorage.setItem(LOCAL_DATA,...[],JSON.stringify( this.state))
+      this.cleanState()
+    }
+    handleUpdate=()=>{
+
     }
 
     handleChange = item => event => {
@@ -37,12 +45,27 @@ export default class ColorDictionary extends Component {
 
 
     render() { 
-        const {domain,range}=this.state
-    
+        const {domain,range,indx}=this.state
+        console.log("hello   "+this.props.indx)
+         let actionButtons= (this.props.indx ===0 ?                   
+             <Fab  color="secondary" aria-label="delete" className="button" onClick={this.handleSave}>
+                 <AddIcon />
+             </Fab>
+            :
+            <>
+              <Fab color="primary" aria-label="add" className="button" onClick={this.handleUpdate}>
+                <SaveIcon />
+              </Fab>
+              <Fab color="secondary" aria-label="delete" className="button" onClick={this.handleDelete}>
+                <DeleteIcon />
+              </Fab>
+            </>
+
+            )
         
-
-
+        
         return (
+         
             <div>
                 
                 <TextField
@@ -62,13 +85,8 @@ export default class ColorDictionary extends Component {
                   margin="normal"
                 />
 
-                <Fab color="primary" aria-label="add" className="button" onClick={this.handleSave}>
-                    <SaveIcon />
-                </Fab>
-                <Fab  color="secondary" aria-label="delete" className="button" onClick={this.handleDelete}>
-                    <DeleteIcon />
-                </Fab>
-
+                {actionButtons}
+                
             </div>
           );
     }
