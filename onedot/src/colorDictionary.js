@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
-import {LOCAL_DATA} from "./costants"
 
 import './colorDictionary.css'
 
@@ -17,12 +15,22 @@ export default class ColorDictionary extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            domain:props.domain,
-            range:props.range,
-            indx:props.indx
+            domain:"",//props.domain,
+            range:"",//props.range,
+            id:0
          }
     }
-  
+    
+    componentWillMount(){
+     let  {domain,range,id}=this.props
+      this.setState({domain:domain,
+                      range:range,
+                      id:id})
+     
+    }
+
+
+
     cleanState= async()=>{
       await this.setState({domain:"",range:""})
     }
@@ -45,9 +53,10 @@ export default class ColorDictionary extends Component {
 
 
     render() { 
-        const {domain,range,indx}=this.state
-        console.log("hello   "+this.props.indx)
-         let actionButtons= (this.props.indx ===0 ?                   
+        console.log(this.state)
+        const {domain,range,id}=this.props
+       
+         let actionButtons= (id ===0 ?                   
              <Fab  color="secondary" aria-label="delete" className="button" onClick={this.handleSave}>
                  <AddIcon />
              </Fab>
@@ -65,14 +74,14 @@ export default class ColorDictionary extends Component {
         
         
         return (
-         
+          
             <div>
                 
                 <TextField
                   id="domine"
                   label="Domain"
                   className="textField"
-                  value={domain}
+                  value={this.state.domain}
                   onChange={this.handleChange("domain")}
                   margin="normal"
                 />
@@ -80,7 +89,7 @@ export default class ColorDictionary extends Component {
                   id="range"
                   label="Range"
                   className="textField"
-                  value={range}
+                  value={this.state.range}
                   onChange={this.handleChange("range")}
                   margin="normal"
                 />

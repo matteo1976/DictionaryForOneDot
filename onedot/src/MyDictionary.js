@@ -10,24 +10,25 @@ class MyDictionary  extends Component {
         super(props);
         const  tmpData= localStorage.getItem(LOCAL_DATA)
         this.state = {  
-            listColor: tmpData===""? [{domain:"",range:"",indx:0}]:JSON.parse(tmpData),
-            indx:0
+            listColor: tmpData===""? [{domain:"",range:"",id:0}]:JSON.parse(tmpData),
+            indexField:0
         }
     }
 
     
-    addElement= async (element)=>{
-        element.indx=this.state.indx+1
-        await this.setState({listColor: [...this.state.listColor,element], indx:this.state.indx+1})
-        localStorage.setItem(LOCAL_DATA,this.state.listColor)
+    addElement= (element)=>{
+        element.id=this.state.indexField+1
+        let newListColor=[...this.state.listColor,element]
+        localStorage.setItem(LOCAL_DATA,newListColor)
+        this.setState({listColor:newListColor , indexField:this.state.indexField+1})
+        
     }
 
     deleteEelment=async (element)=>{
-        let {listColor,indx}=this.state
-        let elementToDelete=0
+        let {listColor,indexField}=this.state
 
         for (let i=0; i<=listColor.length;i++){
-            if (listColor[i].indx===element.indx){
+            if (listColor[i].id===element.id){
                 console.log(listColor[i])
                 listColor.splice(i,1)
                 console.log(listColor[i])
@@ -35,26 +36,48 @@ class MyDictionary  extends Component {
             }
         }   
         console.log(listColor)
-        await this.setState({listColor: listColor, indx:this.state.indx-1})
+        await this.setState({listColor: listColor, indexField:indexField-1})
         localStorage.setItem(LOCAL_DATA,this.state.listColor)
         
     }
 
 
     render() { 
-        const {listColor,indx}=this.state
+        const {listColor,indexField}=this.state
         console.log(listColor)
+
+        let appColorDictionary= listColor.map((item,key)=>{
+            console.log("id "+item.id)
+            console.log("range "+item.range)
+            console.log("domain "+item.domain)
+        
+            return(
+                <>
+                <div key={key}> elemento id {item.id}</div>
+                <ColorDictionary domain={item.domain} 
+                         range={item.range} 
+                         addElement={this.addElement}
+                         deleteEelment={this.deleteEelment}
+                         id={item.id}
+                         key={indexField+key} />
+                </>         
+            )})
+        
+
+        console.log(appColorDictionary)        
+    
         return (  
             <div>
-                {listColor.map((item,key)=>
-                    <div key={indx+key+1}>
+                {/* {listColor.map((item,key)=>
+                    <div key={indexField+key+1}>
                         <ColorDictionary domain={item.domain} 
                                  range={item.range} 
                                  addElement={this.addElement}
                                  deleteEelment={this.deleteEelment}
-                                 indx={item.indx}
-                                 key={indx+key} />
-                    </div>)}
+                                 id={item.id}
+                                 key={indexField+key} />
+                    </div>)} */}
+               {appColorDictionary}     
             </div>
         );
     }
