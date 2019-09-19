@@ -5,8 +5,9 @@ import './App.css';
 
 function App() {
 
-  localStorage.setItem(LOCAL_DATA,[])
-
+  if (!localStorage.getItem(LOCAL_DATA)) {
+    localStorage.setItem(LOCAL_DATA,"")
+  }
   return (
     <div className="App">
       <h1>Dictionary Management Application</h1>

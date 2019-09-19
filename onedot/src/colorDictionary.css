@@ -9,4 +9,28 @@
     margin-right: 20px!important;
 
 }    
+.errorLine{
+    display: inline-flex;
+    background:#f0a0a0;
+}
+
   
+.defaultLine{
+    display: inline-flex;
+    
+}    
+
+.listContainer{
+    width: 50%;
+    margin: auto;
+}
+  
+.oneButton{
+    display: inline-block;
+    
+}
+
+.twoButton{
+    display: inline-block;
+    margin-right: -60px;    
+}

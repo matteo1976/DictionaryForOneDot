@@ -29,19 +29,11 @@ export default class ColorDictionary extends Component {
      
     }
 
-
-
-    cleanState= async()=>{
-      await this.setState({domain:"",range:""})
-    }
-
     handleDelete=()=>{
       this.props.deleteEelment(this.state)
-      this.cleanState()
     }
     handleSave=()=>{    
       this.props.addElement(this.state)
-      this.cleanState()
     }
     handleUpdate=()=>{
 
@@ -53,30 +45,34 @@ export default class ColorDictionary extends Component {
 
 
     render() { 
-        console.log(this.state)
-        const {domain,range,id}=this.props
-       
+        const {domain,range,id,errCheck}=this.props
+       const textFieldsClass=errCheck<0 ? "defaultLine" :"errorLine"
+         
+
          let actionButtons= (id ===0 ?                   
+             <span className= "oneButton">
              <Fab  color="secondary" aria-label="delete" className="button" onClick={this.handleSave}>
                  <AddIcon />
              </Fab>
+             </span>
             :
-            <>
+            
+            <span className= "twoButton">
               <Fab color="primary" aria-label="add" className="button" onClick={this.handleUpdate}>
                 <SaveIcon />
               </Fab>
               <Fab color="secondary" aria-label="delete" className="button" onClick={this.handleDelete}>
                 <DeleteIcon />
               </Fab>
-            </>
+            </span>
 
             )
         
-        
+            
         return (
           
-            <div>
-                
+            <div className="listContainer" >
+                <span className= {textFieldsClass}>
                 <TextField
                   id="domine"
                   label="Domain"
@@ -93,8 +89,9 @@ export default class ColorDictionary extends Component {
                   onChange={this.handleChange("range")}
                   margin="normal"
                 />
-
+                </span>
                 {actionButtons}
+                
                 
             </div>
           );

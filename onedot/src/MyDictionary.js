@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ColorDictionary from './colorDictionary'
 
 import {LOCAL_DATA} from "./costants"
-
+import{findIndexErrorInDictionary} from "./utility"
 
 
 class MyDictionary  extends Component {
@@ -11,16 +11,23 @@ class MyDictionary  extends Component {
         const  tmpData= localStorage.getItem(LOCAL_DATA)
         this.state = {  
             listColor: tmpData===""? [{domain:"",range:"",id:0}]:JSON.parse(tmpData),
-            indexField:0
+            indexField:0,
+            errorIndex:[]
         }
     }
 
-    
+   
     addElement= (element)=>{
-        element.id=this.state.indexField+1
-        let newListColor=[...this.state.listColor,element]
-        localStorage.setItem(LOCAL_DATA,newListColor)
-        this.setState({listColor:newListColor , indexField:this.state.indexField+1})
+
+        let verify= findIndexErrorInDictionary(this.state.listColor,element)
+        if (verify.length===0 ){
+            element.id=this.state.indexField+1
+            let newListColor=[...this.state.listColor,element]
+            localStorage.setItem(LOCAL_DATA, JSON.stringify(newListColor) )
+            this.setState({listColor:newListColor , indexField:this.state.indexField+1,errorIndex:[]})
+        }else{
+            this.setState({errorIndex:verify})
+        }
         
     }
 
@@ -29,54 +36,35 @@ class MyDictionary  extends Component {
 
         for (let i=0; i<=listColor.length;i++){
             if (listColor[i].id===element.id){
-                console.log(listColor[i])
                 listColor.splice(i,1)
-                console.log(listColor[i])
                 break;
             }
         }   
-        console.log(listColor)
         await this.setState({listColor: listColor, indexField:indexField-1})
-        localStorage.setItem(LOCAL_DATA,this.state.listColor)
+        localStorage.setItem(LOCAL_DATA, JSON.stringify( this.state.listColor))
         
     }
 
 
     render() { 
-        const {listColor,indexField}=this.state
-        console.log(listColor)
+        const {listColor,indexField,errorIndex}=this.state
+        let appColorDictionary= listColor.map((item,index)=>{
+            let errCheck= errorIndex.findIndex((errIndexs)=>errIndexs==index)
 
-        let appColorDictionary= listColor.map((item,key)=>{
-            console.log("id "+item.id)
-            console.log("range "+item.range)
-            console.log("domain "+item.domain)
-        
             return(
                 <>
-                <div key={key}> elemento id {item.id}</div>
                 <ColorDictionary domain={item.domain} 
                          range={item.range} 
                          addElement={this.addElement}
                          deleteEelment={this.deleteEelment}
                          id={item.id}
-                         key={indexField+key} />
+                         errCheck={errCheck}
+                         key={indexField+index} />
                 </>         
             )})
-        
-
-        console.log(appColorDictionary)        
     
         return (  
             <div>
-                {/* {listColor.map((item,key)=>
-                    <div key={indexField+key+1}>
-                        <ColorDictionary domain={item.domain} 
-                                 range={item.range} 
-                                 addElement={this.addElement}
-                                 deleteEelment={this.deleteEelment}
-                                 id={item.id}
-                                 key={indexField+key} />
-                    </div>)} */}
                {appColorDictionary}     
             </div>
         );
