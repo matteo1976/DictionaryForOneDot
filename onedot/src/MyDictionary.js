@@ -18,6 +18,9 @@ class MyDictionary  extends Component {
 
    
     addElement= (element)=>{
+        if ((element.domain==="")|| (element.range=="") ){
+            return alert("Domain and range must be have a value")
+        }
         let verify= findIndexErrorInDictionary(this.state.listColor,element)
         if (verify.length===0 ){
             element.id=this.state.indexField+1
@@ -42,9 +45,13 @@ class MyDictionary  extends Component {
     }
 
     updateElement=(element)=>{
+        if ((element.domain==="")|| (element.range=="") ){
+            return alert("Domain and range must be have a value")
+        }
+        
         let {listColor}=this.state
         let index=listColor.findIndex(item=>item.id===element.id)
-
+        
         listColor[index].range=element.range
         listColor[index].domain=element.domain
         let verify= findIndexErrorInDictionary(listColor,element)

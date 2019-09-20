@@ -8,24 +8,23 @@
 
     margin-left:10px !important;
     margin-right: 10px!important;
+    max-width: 100%!important;
+    min-width: 40% !important;
 
 }    
 .errorLine{
-    display: inline-flex;
+    display: inline-block;
     background:#f0a0a0;
+    width: 100%;
 }
 
   
 .defaultLine{
-    display: inline-flex;
+    display: inline-block;
+    width: 100%;
     
 }    
 
-.listContainer{
-    max-width:  90%;
-    margin: auto;
-}
-  
 .oneButton{
     display: inline-block;
     
@@ -35,3 +34,9 @@
     display: inline-block;
     margin-right: -60px;    
 }
+.root {
+    flex-grow: 1;
+    width: 40%;
+    margin:auto
+}
+
